@@ -30,21 +30,14 @@ Following are the steps to be followed to get the ICP app to be able to use Reac
    - Delete all the contents of main.jsx file and replace it with the following:
    
       import React from 'react';
-     
       import { createRoot } from "react-dom/client";
-     
       import App from './App';
-     
       import './index.scss';
       
       const rootElement = document.getElementById("root");
       const root = createRoot(rootElement);
       
-      root.render(
-      <React.StrictMode>
-      <App />
-      </React.StrictMode>,
-      ); 
+      root.render(<React.StrictMode> <App /> </React.StrictMode>); 
    
    - Delete all the contents of index.html file and replace it with the contents of index.html from your keeper-App. Change the title to your new title (My Keeper), remove the link of the styles.css since it is imported by the main.jsx file from index.scss as above indicated. also make sure to put this line at the bottom of the body element:
 
