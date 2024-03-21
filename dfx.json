@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "mykeeper_backend": {
+      "main": "src/mykeeper_backend/main.mo",
+      "type": "motoko"
+    },
+    "mykeeper_frontend": {
+      "dependencies": [
+        "mykeeper_backend"
+      ],
+      "source": [
+        "src/mykeeper_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "mykeeper_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
