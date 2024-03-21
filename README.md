@@ -15,22 +15,26 @@ Following are the steps to be followed to get the ICP app to be able to use Reac
 
 1. Create a new ICP application, just as we did before. So inside ic-projects we're going to create our new dfx project: dfx new mykeeper and hit Enter.
 2. Then respond to the multi-selection queries as following:
-   > ? Select a backend language: > Motoko
-   > ? Select a frontend framework: › React
-   > ? Add extra features (space to select, enter to confirm) › Frontend tests
+   
+   - ? Select a backend language: > Motoko
+   - ? Select a frontend framework: › React
+   - ? Add extra features (space to select, enter to confirm) › Frontend tests
 
-3. Hit Enter and once you see the Dfinity logo, then you are done.
-4. Now inside VSCode, cd to the new mykeeper application and we're going to have to do a few things to modify it so that it can actually run our React application. So go ahead and expand src folder. And then inside it, there are two other folders:
+4. Hit Enter and once you see the Dfinity logo, then you are done.
+5. Now inside VSCode, cd to the new mykeeper application and we're going to have to do a few things to modify it so that it can actually run our React application. So go ahead and expand src folder. And then inside it, there are two other folders:
    - mykeeper_backend, which is where we have our Motoko file main.mo.
    - mykeeper_frontend, you've got the index.html, the public folder and the src folder that includes the js, jsx and scss files.
-5. So we're going to replace the contents of index.scss file, the index.html. App.jsx file and also the main.jsx with files from your keeper-App as following:
+6. So we're going to replace the contents of index.scss file, the index.html. App.jsx file and also the main.jsx with files from your keeper-App as following:
    - Make sure to keep the location of all files in the created hierarchy intact to avoid functioning errors.
    - Delete all the contents of index.scss file and replace it with the contents of styles.css from your keeper-App.
    - Delete all the contents of main.jsx file and replace it with the following:
    
       import React from 'react';
+     
       import { createRoot } from "react-dom/client";
+     
       import App from './App';
+     
       import './index.scss';
       
       const rootElement = document.getElementById("root");
