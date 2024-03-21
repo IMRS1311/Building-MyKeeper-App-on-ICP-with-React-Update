@@ -28,24 +28,24 @@ Following are the steps to be followed to get the ICP app to be able to use Reac
     Delete all the contents of index.scss file and replace it with the contents of styles.css from your keeper-App.
     Delete all the contents of main.jsx file and replace it with the following:
    
-   import React from 'react';
-   import { createRoot } from "react-dom/client";
-   import App from './App';
-   import './index.scss';
-
-    const rootElement = document.getElementById("root");
-    const root = createRoot(rootElement);
-
-    root.render(
-    <React.StrictMode>
-    <App />
-    </React.StrictMode>,
-    ); 
+      import React from 'react';
+      import { createRoot } from "react-dom/client";
+      import App from './App';
+      import './index.scss';
+   
+       const rootElement = document.getElementById("root");
+       const root = createRoot(rootElement);
+   
+       root.render(
+       <React.StrictMode>
+       <App />
+       </React.StrictMode>,
+       ); 
    
  Delete all the contents of index.html file and replace it with the contents of index.html from your keeper-App. Change the title to your new title (My Keeper), remove the link of the styles.css since it is imported by the main.jsx file from index.scss as above indicated. also make sure to put this line at the bottom of the body element:
 
   
-  <script type="module" src="/src/main.jsx"></script>
+     <script type="module" src="/src/main.jsx"></script>
  
 
  Copy the Components folder from your keeper-App and paste it inside the src folder
@@ -60,11 +60,8 @@ Now, go ahead and run dfx deploy and deploy our canisters onto the simulated ICP
 Finally, when your canisters have been deployed, you can go ahead and run npm start and go to browser and go to our localhost that has been defined in the terminal and it is in my case http://localhost:3000/, and you can see the front end of our React application is now up and running.
 
 But this has no backend and it's got no sort of Motoko code or nothing really that we've done for it on the ICP side.
-
 But it's just to prove that our frontend has actually been linked up correctly and that we can actually get it hosted locally.
-
 So if you add any new note, you can see this gets added, and you can see that everything is working fine. But if you hit refresh, everything gets deleted because there is no backend there and there is no storage.
-
 So we have to be link this up with our main.mo so that we can persist the data typed in the browser and store them on the internet computer blockchain.
 
 
@@ -77,12 +74,12 @@ Storing Data on a Canister:
 -	Create an actor, which is our canister and call it for example Mykeeper.
 -	Inside Mykeeper actor, create a new data type Note to represent the kind of data that will be stored in each of these notes (title and content) as per our mykeeper App requirements and as we have already defined in the frontend:
 
-  actor Mykeeper {
-  public type Note = {
-      title: Text;
-      content: Text;
-    };
-  }
+     actor Mykeeper {
+     public type Note = {
+         title: Text;
+         content: Text;
+       };
+     }
  
   Notice that both “title” and “content” are going to be of type Text.
   Also do not forget to close the curly braces with a semicolon. 
@@ -91,30 +88,30 @@ Storing Data on a Canister:
   This way when we're writing our code in our main.jsx or inside our Components, we'll be able to see this data type and be able to use it there as well.
 -	Create our new variable notes. And this variable is going to have a data type of a List, which is kind of similar to the Arrays that we've been working with in JavaScript, but also a little bit different. And we'll point out the differences later on. The List is going to contain Note type. So to specify that in this data type, we have to write it this way:
 
-  var notes: List.List<Note> = List.nil<Note>();
+     var notes: List.List<Note> = List.nil<Note>();
 
   And because we're going to start it off as an empty list, so we'll just say it is equal to:
 
-  List.nil<Note>();
+     List.nil<Note>();
 
 -	Now you'll see a red underline here saying unbound variable list and this is because in order to use some of its functionality, so if we use list dot something, we're no longer using it as a type, but we're using some of its methods. So we have to import it basically:  
 
-  import List "mo:base/List"; 
+     import List "mo:base/List"; 
 
   and now you can see those errors disappear.
   So here we've basically created the equivalent of an array of Note objects, but in this case, it's actually a List that contains objects of type Note.
 -	Now we're going to create our public function createNote and it's going to allow us to send over some titleText from the JavaScript side when the user enters it into the text field and also send over some contentText:
 
-  public func createNote(titleText: Text, contentText: Text) { -->
+     public func createNote(titleText: Text, contentText: Text) {}
 
 
 -	And once we've gotten hold of that, then we can create a newNote so we can say let newNote be of type Note:
 
-  public func createNote(titleText: Text, contentText: Text) {
-      let newNote: Note = {
-      title = titleText;
-      content = contentText;
-    };
+     public func createNote(titleText: Text, contentText: Text) {
+         let newNote: Note = {
+         title = titleText;
+         content = contentText;
+       };
 
 
   So notice that we've got equal when we created the newNote and when we declared the type, we've got the colons to specify the data type.
@@ -123,44 +120,43 @@ Storing Data on a Canister:
   And now here we've created our new note from whatever data was added to the input when this method was called from the JavaScript side.
 
 -	And finally, what we have to do is to add this new note to this list of notes:
-    notes:= List.push(newNote, notes);
+
+       notes:= List.push(newNote, notes);
+ 	
   So we're using this push as one function of List method in order to push an item onto the List, we have to specify two things. One is the item that is going to be pushed into the list: newNote, and second is the list that you want to push it on: notes. And we have assigned the new created List to our list notes.
 
   And if you take a look in the dfinity documentation and you go to this List type, you can see that we've used the nil to create an empty List. And we use the push to add the newNote to the List.
-
   And you can see it happens by pre-pending a value. So it's going to get added to the beginning of the list.
   And this is a little bit different from how we add to arrays normally where we normally append it, so we add it to the end.
   And this is going to come in as very important a little bit later on when we try to organize our various notes inside the mykeeper app.
 
 -	And once we've done that, let's go ahead and add a debug into this. So let's import the debug library.
-  import Debug "mo:base/Debug";
+  
+     import Debug "mo:base/Debug";
+ 	
   And use debug.print and then debug_show in order to print out what the notes list actually looks like at this point.
-  Debug.print(debug_show(notes));
+  
+     Debug.print(debug_show(notes));
 
 -	So this is all that we have to do in our main.mo file in order to create a new note:
   
-  import List "mo:base/List";
-  import Debug "mo:base/Debug";
-
-  actor Mykeeper {
-    public type Note = {
-      title: Text;
-      content: Text;
-    };
-
-    var notes: List.List<Note> = List.nil<Note>();
-    
-    public func createNote(titleText: Text, contentText: Text) {
-
-      let newNote: Note = {
-        title = titleText;
-        content = contentText;
-      };
-
-      notes:= List.push(newNote, notes);
-      Debug.print(debug_show(notes));
-    }
-  }
+     import List "mo:base/List";
+     import Debug "mo:base/Debug";
+     actor Mykeeper {
+       public type Note = {
+         title: Text;
+         content: Text;
+       };
+       var notes: List.List<Note> = List.nil<Note>();
+       public func createNote(titleText: Text, contentText: Text) {
+         let newNote: Note = {
+           title = titleText;
+           content = contentText;
+         };
+         notes:= List.push(newNote, notes);
+         Debug.print(debug_show(notes));
+       }
+     }
 
 -	Now, we have to link up what we've created in Motoko file with our JavaScript. And where most of the action is happening on the JavaScript side is inside the createNote.jsx.
 
@@ -178,7 +174,8 @@ Storing Data on a Canister:
   So inside the submitNotes function, when we're triggering setNotesList basically to update the state of our notes constant, just before we return, we're going to call that function.
 
   So we're going to say:
-  mykeeper_backend.createNote(newNote.title, newNote.content)
+  
+     mykeeper_backend.createNote(newNote.title, newNote.content)
  
   And in JavaScript, we're going to have to make sure that the order that we add in the arguments matches with the order that we created in our Motoko side.
   So the first thing we add is the title and the next is the content. So in here we're going to tap into this newNote that's created on the frontend. And we're going to tap into, firstly, its newNote.title, and secondly, newNote.content
@@ -214,9 +211,9 @@ So when we're reading it, we're going to get hold of our List to return our note
 That's what we're going to use. We're going to say List.toAarray. And this takes just one argument, which is the list that you want to convert, and it's going to return it in the format of an array:
 
   
-  public query func readNotes(): async [Note] {
-    return List.toArray(notes);
-  }; 
+     public query func readNotes(): async [Note] {
+       return List.toArray(notes);
+     }; 
  
 
 So the Motoko side is pretty simple, but now we have to address how do we get hold of it when our page loads up?
@@ -234,19 +231,19 @@ The first parameter is the function that should be called whenever the re-render
 Inside our useEffect, we're going to call a function that we're going to create, which is going to be called fetchData().
 And the reason why I'm splitting out this fetchData is because this fetchData has to be asynchronous and useEffect can't really be turned into an asynchronous function itself.
 
-  useEffect(() => {
-      console.log("useEffect is triggered");
-      fetchData();
-  }); 
+     useEffect(() => {
+         console.log("useEffect is triggered");
+         fetchData();
+     }); 
  
 Let's create this async function fetchData. And let's make it get hold of our data from our Motoko code. So we're going to tap into our mykeeper_backend canister and we're going to call that method that we created there called readNotes.
 
 And this then should be able to return us that array which we can store in a local constant, which we can call the notesArray. Because this is going to be returned asynchronously, we have to wait on it. So we have to add the await keyword in front of this method call so that we wait for this to come back before we continue:
 
-async function fetchData() {
-    const notesArray = await mykeeper_backend.readNotes();
-    setNotesList(notesArray);
-} 
+   async function fetchData() {
+       const notesArray = await mykeeper_backend.readNotes();
+       setNotesList(notesArray);
+   } 
 
 Now, whenever our window loads, it's going to trigger the console.log but also our fetchData. And then this method is going to wait until it gets that array back.
 And once it gets it though, we want to be able to update our notes using the update method setNotesList.
@@ -267,10 +264,10 @@ And this will ensure that useEffect will run only once.
 
 So after this first argument which is our function, we're going to add a comma and add an empty array so that it stops once this has completed once, which is all we want because we only want this to happen when the re-render or when the website reloads:
 
-useEffect(() => {
-    console.log("useEffect is triggered");
-    fetchData();
-}, []); 
+   useEffect(() => {
+       console.log("useEffect is triggered");
+       fetchData();
+   }, []); 
 
 So now let's hit save. Let's go back to our My Keeper app and you can see that useEffect is triggered once.
 But if we go ahead and take a note and click add, you can see the note is added in there. But now because these notes are created on the front end and persisted on the backend, if we hit reload, they don't disappear because they're being read from our Motoko backend on the blockchain and they're being pulled out each time we reload.
@@ -283,16 +280,13 @@ So how can we fix this?
 =======================
 
 The only thing we have to change then is when we add it to the frontend, remember that it updates because setNotesList triggers an update in the state.
-
 And here we're saying let's get hold of the previous notes and let's create this newNote and we're taking the newNote and adding it to the end of all of the previous notes.
-
 So if we just simply reverse this array, so we say, let's add the new note to the beginning, and then we'll add the previous notes at the end, then we're going to get a different order:
 
-
-setNotesList(prevList => {
-    mykeeper_backend.createNote(newNote.title, newNote.content)
-    return [newNote, ...prevList];
-    }); 
+   setNotesList(prevList => {
+       mykeeper_backend.createNote(newNote.title, newNote.content)
+       return [newNote, ...prevList];
+       }); 
 
 So if we hit save, we go back and we add a new note, we'll call it Note 2 and click add you can see it now gets added to the very beginning. And if we refresh our website, nothing happens. 
 None of the orders change and it works as we would expect it to. 
@@ -305,7 +299,6 @@ You can delete notes on the frontend but as soon as you hit refresh and we pull 
 Notice in createNote.jsx, we've got the deleteListNote function and all it does at the moment is it updates our constant notes using the setNotesList method to filter through all of the notes and check for the one that has the index that's selected and then basically get rid of it from the previous notes.
 
 That is why frontend appears to work, but we need to link it up with our main.mo so that when we actually hit refresh and we pull in these notes that it actually persists.
-
 If you look through the documentation as of right now, there actually isn't a utility function for the list in Motoko that allows us to just remove a List item based on its index. So we have to figure out how to do it using the available methods.
 
 Actually we have to build the removeNote function as simple as we can. So, in our solution we are not going to use any method to pull out or delete any item from the backend List. But we are going to use some workaround to take the notes array after filtering out the deleted item and assign it to a new variable newList. Then, we pull the newList array from the frontend to our backend main.mo where we convert it to List and assign it to our notes List. By this way we replace our backend notes List with a new List generated from the newList array that doesn’t include the deleted item.
@@ -316,30 +309,28 @@ So, in order to do that we will do two parts:
 First part: in our backend main.mo:
 -	Inside our actor Mykeeper, create a new  public data type array that includes the Note data type earlier created:
 
-  public type MyArray = [Note]; 
+     public type MyArray = [Note]; 
 
 -	Create public removeNote function that will take one input newList of a type MyArray. Inside this function convert the newList array to List and assign it to our notes List. Then use Debug.print to observe the updated notes List in the Terminal:
 
-  public func removeNote(newList: MyArray) {
-
-    notes:= List.fromArray(newList);
-    Debug.print(debug_show(notes));
-
-          // To observe the length of the updated notes List
-    var myListSize: Nat= List.size(notes);
-    Debug.print(debug_show(myListSize));
-  }; 
+     public func removeNote(newList: MyArray) {
+       notes:= List.fromArray(newList);
+       Debug.print(debug_show(notes));
+             // To observe the length of the updated notes List
+       var myListSize: Nat= List.size(notes);
+       Debug.print(debug_show(myListSize));
+     }; 
 
 Second part: in our frontend Note.jsx component:
 -	Import mykeeper_backend from backend declarations:
 
-  import {mykeeper_backend} from "../../../declarations/mykeeper_backend"; 
+     import {mykeeper_backend} from "../../../declarations/mykeeper_backend"; 
 
 
 -	Inside the Notes function and under the deleteNote function create a new const and assign to it the notes array sent as a prop from createNote.jsx component. You can console.log it for verification:
 
-  const newList = props.notes;
-  console.log(newList); 
+     const newList = props.notes;
+     console.log(newList); 
 
 -	Call the removeNote function from main.mo in mykeeper_backend and assign the newList array as input:
     mykeeper_backend.removeNote(newList);
@@ -372,20 +363,18 @@ But basically we're going through this three step process in order to remove an 
 The final step is we're going to reset our notes so using that := sign, we're going to set it to the List.append and we're going to append the listFront to the listBack.
 
 
-  public func removeNote(id: Nat) {
-    // take drop append
-    let listFront = List.take(notes, id);    // Takes items preceding the item with index id.
-    let listBack = List.drop(notes, id + 1); // Drops items including the item with index id.
-    notes := List.append(listFront, listBack);
-
-    Debug.print(debug_show(notes));
-  }; 
+     public func removeNote(id: Nat) {
+       // take drop append
+       let listFront = List.take(notes, id);    // Takes items preceding the item with index id.
+       let listBack = List.drop(notes, id + 1); // Drops items including the item with index id.
+       notes := List.append(listFront, listBack);
+       Debug.print(debug_show(notes));
+     }; 
 
 In this solution we will not need any relevant code in the Note.jsx component. So, we will comment them out since they are relating to the other alternative solution:
 
-
   // import {mykeeper_backend} from "../../../declarations/mykeeper_backend";
-
+  
       // const newList = props.notes;
       // console.log(newList);
       // mykeeper_backend.removeNote(newList); 
@@ -419,7 +408,7 @@ So now if I go back to my localhost, I hit refresh, you'll notice that all the n
 But we have one trick up our sleeve, and you've got it. It's that stable keyword.
 By turning notes into a stable variable, our list now persists across upgrades, which means that we've basically got a permanent storage solution for our mykeeper app:
 
-stable var notes: List.List<Note> = List.nil<Note>(); 
+   stable var notes: List.List<Note> = List.nil<Note>(); 
 
 And now not only do we have a backend, because if I go ahead and hit deploy and I hit refresh, firstly they don't disappear because we've got that storage on our backend.
 But now if I go into my main.mo, I change the code significantly. So delete that line for debug or add a line for debug, basically either way forcing it to update my canister when I do dfx deploy.
