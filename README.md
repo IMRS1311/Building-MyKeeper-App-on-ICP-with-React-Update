@@ -15,41 +15,41 @@ Following are the steps to be followed to get the ICP app to be able to use Reac
 
 1. Create a new ICP application, just as we did before. So inside ic-projects we're going to create our new dfx project: dfx new mykeeper and hit Enter.
 2. Then respond to the multi-selection queries as following:
-    ? Select a backend language: > Motoko
-    ? Select a frontend framework: › React
-    ? Add extra features (space to select, enter to confirm) › Frontend tests
+   > ? Select a backend language: > Motoko
+   > ? Select a frontend framework: › React
+   > ? Add extra features (space to select, enter to confirm) › Frontend tests
 
 3. Hit Enter and once you see the Dfinity logo, then you are done.
 4. Now inside VSCode, cd to the new mykeeper application and we're going to have to do a few things to modify it so that it can actually run our React application. So go ahead and expand src folder. And then inside it, there are two other folders:
-    mykeeper_backend, which is where we have our Motoko file main.mo.
-    mykeeper_frontend, you've got the index.html, the public folder and the src folder that includes the js, jsx and scss files.
+   - mykeeper_backend, which is where we have our Motoko file main.mo.
+   - mykeeper_frontend, you've got the index.html, the public folder and the src folder that includes the js, jsx and scss files.
 5. So we're going to replace the contents of index.scss file, the index.html. App.jsx file and also the main.jsx with files from your keeper-App as following:
-    Make sure to keep the location of all files in the created hierarchy intact to avoid functioning errors.
-    Delete all the contents of index.scss file and replace it with the contents of styles.css from your keeper-App.
-    Delete all the contents of main.jsx file and replace it with the following:
+   - Make sure to keep the location of all files in the created hierarchy intact to avoid functioning errors.
+   - Delete all the contents of index.scss file and replace it with the contents of styles.css from your keeper-App.
+   - Delete all the contents of main.jsx file and replace it with the following:
    
       import React from 'react';
       import { createRoot } from "react-dom/client";
       import App from './App';
       import './index.scss';
+      
+      const rootElement = document.getElementById("root");
+      const root = createRoot(rootElement);
+      
+      root.render(
+      <React.StrictMode>
+      <App />
+      </React.StrictMode>,
+      ); 
    
-       const rootElement = document.getElementById("root");
-       const root = createRoot(rootElement);
-   
-       root.render(
-       <React.StrictMode>
-       <App />
-       </React.StrictMode>,
-       ); 
-   
- Delete all the contents of index.html file and replace it with the contents of index.html from your keeper-App. Change the title to your new title (My Keeper), remove the link of the styles.css since it is imported by the main.jsx file from index.scss as above indicated. also make sure to put this line at the bottom of the body element:
+   - Delete all the contents of index.html file and replace it with the contents of index.html from your keeper-App. Change the title to your new title (My Keeper), remove the link of the styles.css since it is imported by the main.jsx file from index.scss as above indicated. also make sure to put this line at the bottom of the body element:
 
   
      <script type="module" src="/src/main.jsx"></script>
  
 
- Copy the Components folder from your keeper-App and paste it inside the src folder
- Delete all the contents of App.jsx file and replace it with the contents of App.jsx from keeper-App. And make sure to modify the import statements to reflect the correct directories of Components folder files if needed. 6. Now we have mykeeper_frontend that includes index.html file, public folder and src folder. Src folder includes Components folder, App.jsx file, index.scss file and main.jsx file. And now we've basically moved our entire React frontend over to our mykeeper project. So we've created a new ICP project on the command line, we've downloaded our files, we dragged them into their proper places as above indicated and now we have to go ahead and update some of these files and change some of the contents.
+   - Copy the Components folder from your keeper-App and paste it inside the src folder
+   - Delete all the contents of App.jsx file and replace it with the contents of App.jsx from keeper-App. And make sure to modify the import statements to reflect the correct directories of Components folder files if needed. 6. Now we have mykeeper_frontend that includes index.html file, public folder and src folder. Src folder includes Components folder, App.jsx file, index.scss file and main.jsx file. And now we've basically moved our entire React frontend over to our mykeeper project. So we've created a new ICP project on the command line, we've downloaded our files, we dragged them into their proper places as above indicated and now we have to go ahead and update some of these files and change some of the contents.
 
 7. Now the final thing we have to do before we run our frontend is to go into the mykeeper_frontend /package.json, go ahead and modify the contents by adding lines from the Keeper-App package.json file that do not exist in mykeeper package.json. Those are mainly the "dependencies" and "browserslist" elements. So, now let's hit save and we are finally ready to actually test out our frontend and see if it actually works on local host.
 
